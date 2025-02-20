@@ -1,26 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
-	<title></title>
-	<meta name="generator" content="LibreOffice 24.8.4.2 (Linux)"/>
-	<meta name="created" content="00:00:00"/>
-	<meta name="changed" content="00:00:00"/>
-	<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=1u0qdfS1bBOywaXgqUvZdPui-aXAVLq7qRyieP1pynJl59-M4g_qqP4tpL5KIYKqfxLQ-n_cdZYEnnKPAdGVjSVTBRo9LETqyNeF5HFujig6fWi4d5i-GhNGOULIl5e6YK84fiL3EazStY0nZvCONdxbz-JIhDGNkplRWwSzvmtpWr-Ql0HoQC8UjL5AWxCh-eics5QgGj9wuRsUtJbUizjVA7WyuuoxKJJJwNsqItHcwoiR_3B5lDoIppaoPGq05CZtgmjw1zhqQ4-mpFqZf_N0Y3pLapILBBy1CA4HdOaNNUVxS0no083kRExfnDHC9kpwKo8kRTIIGUsN1YBde0_qu29tGw8qjcFNG9L6oAhaQZlQb2Q-uMffyM_CEaP-hJeNsPj_Qw7xyN71kExi2w8GlR8h3dqfS6D-0W5HyH53af357WYnTfoACPBhWd2XSkI52tsfwXb7lkp8j3HlVnKMFooiMLjhJ5-CEOt68pevf4QbybFiITIITLAW1T8gJ9YIjj7U2qRAxVINUonZRZQoE-f3p6XZLQOG94ZQddotQFeKFlTkDQo1USTa9-81ZTJrG-ns7I--dQxE923okxP2uyioC2RjVknSn8pG2y5F3OvSUKE1hwfnJQ2mEO2NmjeOpS50TQOL_FJAMBcdf1ooZr30AKBiMyjVusrXWfJeHQn1vpL6YiL6F5E7wnO2QFnLe8Cn8bbyDd0k5BeCvPwWJApjxLBYgzZ3sBy4Rrc" charset="UTF-8"></script><style type="text/css">
-		@page { size: 8.27in 11.69in; margin: 0.79in }
-		p { line-height: 115%; margin-bottom: 0.1in; background: transparent }
-		pre { font-family: "Liberation Mono", monospace; font-size: 10pt; background: transparent }
-	</style>
-</head>
-<body lang="en-US" link="#000080" vlink="#800000" dir="ltr"><pre>&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-    &lt;meta charset=&quot;utf-8&quot;&gt;
-    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
-    &lt;title&gt;Coffee Shop&lt;/title&gt;
-    &lt;!-- Подключаем Telegram WebApp --&gt;
-    &lt;script src=&quot;https://telegram.org/js/telegram-web-app.js&quot;&gt;&lt;/script&gt;
-    &lt;style&gt;
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee Shop</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
@@ -72,45 +57,44 @@
             font-size: 14px;
             color: var(--tg-theme-hint-color);
         }
-    &lt;/style&gt;
-&lt;/head&gt;
-&lt;body&gt;
-    &lt;div id=&quot;coffee-list&quot;&gt;
-        &lt;div class=&quot;card&quot;&gt;
-            &lt;div class=&quot;coffee-type&quot;&gt;Эспрессо смесь&lt;/div&gt;
-            &lt;select class=&quot;grind-select&quot; onchange=&quot;updatePrice(this)&quot;&gt;
-                &lt;option value=&quot;whole&quot;&gt;В зернах&lt;/option&gt;
-                &lt;option value=&quot;ground&quot;&gt;Молотый&lt;/option&gt;
-            &lt;/select&gt;
-            &lt;div class=&quot;weight-buttons&quot;&gt;
-                &lt;button class=&quot;weight-btn&quot; onclick=&quot;selectWeight(this, 250, 450)&quot;&gt;250г - 450₽&lt;/button&gt;
-                &lt;button class=&quot;weight-btn&quot; onclick=&quot;selectWeight(this, 1000, 1600)&quot;&gt;1кг - 1600₽&lt;/button&gt;
-            &lt;/div&gt;
-            &lt;div class=&quot;price&quot;&gt;&lt;/div&gt;
-        &lt;/div&gt;
+    </style>
+</head>
+<body>
+    <div id="coffee-list">
+        <div class="card">
+            <div class="coffee-type">Эспрессо смесь</div>
+            <select class="grind-select" onchange="updatePrice(this)">
+                <option value="whole">В зернах</option>
+                <option value="ground">Молотый</option>
+            </select>
+            <div class="weight-buttons">
+                <button class="weight-btn" onclick="selectWeight(this, 250, 450)">250г - 450₽</button>
+                <button class="weight-btn" onclick="selectWeight(this, 1000, 1600)">1кг - 1600₽</button>
+            </div>
+            <div class="price"></div>
+        </div>
 
-        &lt;div class=&quot;card&quot;&gt;
-            &lt;div class=&quot;coffee-type&quot;&gt;Колумбия&lt;/div&gt;
-            &lt;select class=&quot;grind-select&quot; onchange=&quot;updatePrice(this)&quot;&gt;
-                &lt;option value=&quot;whole&quot;&gt;В зернах&lt;/option&gt;
-                &lt;option value=&quot;ground&quot;&gt;Молотый&lt;/option&gt;
-            &lt;/select&gt;
-            &lt;div class=&quot;weight-buttons&quot;&gt;
-                &lt;button class=&quot;weight-btn&quot; onclick=&quot;selectWeight(this, 250, 450)&quot;&gt;250г - 450₽&lt;/button&gt;
-                &lt;button class=&quot;weight-btn&quot; onclick=&quot;selectWeight(this, 1000, 1600)&quot;&gt;1кг - 1600₽&lt;/button&gt;
-            &lt;/div&gt;
-            &lt;div class=&quot;price&quot;&gt;&lt;/div&gt;
-        &lt;/div&gt;
-    &lt;/div&gt;
+        <div class="card">
+            <div class="coffee-type">Колумбия</div>
+            <select class="grind-select" onchange="updatePrice(this)">
+                <option value="whole">В зернах</option>
+                <option value="ground">Молотый</option>
+            </select>
+            <div class="weight-buttons">
+                <button class="weight-btn" onclick="selectWeight(this, 250, 450)">250г - 450₽</button>
+                <button class="weight-btn" onclick="selectWeight(this, 1000, 1600)">1кг - 1600₽</button>
+            </div>
+            <div class="price"></div>
+        </div>
+    </div>
 
-    &lt;script&gt;
+    <script>
         let tg = window.Telegram.WebApp;
-        tg.expand(); // Раскрываем на всю высоту
-        tg.ready(); // Сообщаем что приложение готово
+        tg.expand();
+        tg.ready();
 
-        // Инициализируем главную кнопку
         let mainButton = tg.MainButton;
-        mainButton.text = &quot;Оплатить&quot;;
+        mainButton.text = "Оплатить";
         mainButton.hide();
 
         let selectedCoffee = null;
@@ -127,10 +111,7 @@
                 price: price
             };
 
-            // Показываем кнопку оплаты
             mainButton.show();
-
-            // Обновляем цену
             card.querySelector('.price').textContent = `Итого: ${price}₽`;
         }
 
@@ -140,14 +121,11 @@
             }
         }
 
-        // Обработка нажатия кнопки оплаты
         mainButton.onClick(function() {
             if (selectedCoffee) {
                 tg.sendData(JSON.stringify(selectedCoffee));
             }
         });
-    &lt;/script&gt;
-&lt;/body&gt;
-&lt;/html&gt;</pre>
+    </script>
 </body>
 </html>
