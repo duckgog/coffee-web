@@ -6,100 +6,73 @@
     <title>Coffee Shop</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 16px;
-            color: var(--tg-theme-text-color);
-            background: var(--tg-theme-bg-color);
-        }
+        /* Существующие стили ... */
 
-        .card {
-            padding: 12px;
-            margin-bottom: 12px;
-            border-radius: 8px;
-            background: var(--tg-theme-secondary-bg-color);
-        }
-
-        .coffee-type {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        .grind-select {
-            margin: 8px 0;
-            padding: 8px;
-            width: 100%;
-            border-radius: 4px;
-            border: 1px solid var(--tg-theme-hint-color);
-            background: var(--tg-theme-bg-color);
-            color: var(--tg-theme-text-color);
-        }
-
-        .weight-buttons {
+        .tabs {
             display: flex;
-            gap: 8px;
-            margin: 8px 0;
+            margin-bottom: 16px;
         }
 
-        .weight-btn {
+        .tab {
             flex: 1;
-            padding: 8px;
-            border: none;
-            border-radius: 4px;
-            background: var(--tg-theme-button-color);
-            color: var(--tg-theme-button-text-color);
+            padding: 12px;
+            text-align: center;
+            background: var(--tg-theme-secondary-bg-color);
+            color: var(--tg-theme-hint-color);
             cursor: pointer;
         }
 
-        .price {
-            font-size: 14px;
-            color: var(--tg-theme-hint-color);
+        .tab.active {
+            background: var(--tg-theme-button-color);
+            color: var(--tg-theme-button-text-color);
         }
 
-        .cart {
-            margin-top: 20px;
-            padding: 12px;
-            border-radius: 8px;
-            background: var(--tg-theme-secondary-bg-color);
+        #shop-view, #cart-view {
+            display: none;
         }
 
-        .cart-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 12px;
+        #shop-view.active, #cart-view.active {
+            display: block;
         }
 
         .cart-item {
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            padding: 12px;
             margin-bottom: 8px;
-            padding: 8px;
-            background: var(--tg-theme-bg-color);
-            border-radius: 4px;
+            background: var(--tg-theme-secondary-bg-color);
+            border-radius: 8px;
         }
 
         .cart-total {
-            margin-top: 12px;
-            font-weight: bold;
+            margin-top: 16px;
+            padding: 12px;
             text-align: right;
+            font-weight: bold;
+            background: var(--tg-theme-secondary-bg-color);
+            border-radius: 8px;
         }
 
         .remove-btn {
             color: #ff5252;
-            cursor: pointer;
-            padding: 4px 8px;
-            border: none;
             background: none;
+            border: none;
+            padding: 4px 8px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <div id="coffee-list">
+    <div class="tabs">
+        <div class="tab active" onclick="showTab('shop')">Магазин</div>
+        <div class="tab" onclick="showTab('cart')">Корзина <span id="cart-count">(0)</span></div>
+    </div>
+
+    <div id="shop-view" class="active">
         <div class="card">
             <div class="coffee-type">Бразилия Моджиана</div>
-            <select class="grind-select" onchange="updatePrice(this)">
+            <select class="grind-select">
                 <option value="whole">В зернах</option>
                 <option value="ground">Молотый</option>
             </select>
@@ -107,12 +80,11 @@
                 <button class="weight-btn" onclick="addToCart(this, 250, 500)">250г - 500₽</button>
                 <button class="weight-btn" onclick="addToCart(this, 1000, 1500)">1кг - 1500₽</button>
             </div>
-            <div class="price"></div>
         </div>
 
         <div class="card">
             <div class="coffee-type">Светлый бленд</div>
-            <select class="grind-select" onchange="updatePrice(this)">
+            <select class="grind-select">
                 <option value="whole">В зернах</option>
                 <option value="ground">Молотый</option>
             </select>
@@ -120,14 +92,14 @@
                 <button class="weight-btn" onclick="addToCart(this, 250, 440)">250г - 440₽</button>
                 <button class="weight-btn" onclick="addToCart(this, 1000, 1100)">1кг - 1100₽</button>
             </div>
-            <div class="price"></div>
         </div>
     </div>
 
-    <div class="cart">
-        <div class="cart-title">Корзина</div>
+    <div id="cart-view">
         <div id="cart-items"></div>
-        <div class="cart-total">Итого: <span id="cart-total">0</span>₽</div>
+        <div class="cart-total">
+            Итого: <span id="cart-total">0</span>₽
+        </div>
     </div>
 
     <script>
@@ -140,6 +112,22 @@
         mainButton.hide();
 
         let cartItems = [];
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                if (tab.textContent.toLowerCase().includes(tabName)) {
+                    tab.classList.add('active');
+                }
+            });
+
+            document.querySelectorAll('#shop-view, #cart-view').forEach(view => {
+                view.classList.remove('active');
+            });
+            document.getElementById(`${tabName}-view`).classList.add('active');
+        }
 
         function addToCart(btn, weight, price) {
             const card = btn.closest('.card');
@@ -155,12 +143,13 @@
 
             cartItems.push(item);
             updateCart();
-            mainButton.show();
+            showTab('cart');
         }
 
         function updateCart() {
             const cartContainer = document.getElementById('cart-items');
             const totalElement = document.getElementById('cart-total');
+            const cartCountElement = document.getElementById('cart-count');
             let total = 0;
 
             cartContainer.innerHTML = '';
@@ -169,15 +158,22 @@
                 const itemElement = document.createElement('div');
                 itemElement.className = 'cart-item';
                 itemElement.innerHTML = `
-                    <div>${item.type} ${item.weight}г (${item.grind === 'ground' ? 'Молотый' : 'В зернах'}) - ${item.price}₽</div>
+                    <div>
+                        <div>${item.type}</div>
+                        <div>${item.weight}г (${item.grind === 'ground' ? 'Молотый' : 'В зернах'})</div>
+                        <div>${item.price}₽</div>
+                    </div>
                     <button class="remove-btn" onclick="removeFromCart(${index})">✕</button>
                 `;
                 cartContainer.appendChild(itemElement);
             });
 
             totalElement.textContent = total;
+            cartCountElement.textContent = `(${cartItems.length})`;
             
-            if (cartItems.length === 0) {
+            if (cartItems.length > 0) {
+                mainButton.show();
+            } else {
                 mainButton.hide();
             }
         }
