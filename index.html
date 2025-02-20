@@ -57,35 +57,77 @@
             font-size: 14px;
             color: var(--tg-theme-hint-color);
         }
+
+        .cart {
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 8px;
+            background: var(--tg-theme-secondary-bg-color);
+        }
+
+        .cart-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding: 8px;
+            background: var(--tg-theme-bg-color);
+            border-radius: 4px;
+        }
+
+        .cart-total {
+            margin-top: 12px;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .remove-btn {
+            color: #ff5252;
+            cursor: pointer;
+            padding: 4px 8px;
+            border: none;
+            background: none;
+        }
     </style>
 </head>
 <body>
     <div id="coffee-list">
         <div class="card">
-            <div class="coffee-type">Эспрессо смесь</div>
+            <div class="coffee-type">Бразилия Моджиана</div>
             <select class="grind-select" onchange="updatePrice(this)">
                 <option value="whole">В зернах</option>
                 <option value="ground">Молотый</option>
             </select>
             <div class="weight-buttons">
-                <button class="weight-btn" onclick="selectWeight(this, 250, 450)">250г - 450₽</button>
-                <button class="weight-btn" onclick="selectWeight(this, 1000, 1600)">1кг - 1600₽</button>
+                <button class="weight-btn" onclick="addToCart(this, 250, 500)">250г - 500₽</button>
+                <button class="weight-btn" onclick="addToCart(this, 1000, 1500)">1кг - 1500₽</button>
             </div>
             <div class="price"></div>
         </div>
 
         <div class="card">
-            <div class="coffee-type">Колумбия</div>
+            <div class="coffee-type">Светлый бленд</div>
             <select class="grind-select" onchange="updatePrice(this)">
                 <option value="whole">В зернах</option>
                 <option value="ground">Молотый</option>
             </select>
             <div class="weight-buttons">
-                <button class="weight-btn" onclick="selectWeight(this, 250, 450)">250г - 450₽</button>
-                <button class="weight-btn" onclick="selectWeight(this, 1000, 1600)">1кг - 1600₽</button>
+                <button class="weight-btn" onclick="addToCart(this, 250, 440)">250г - 440₽</button>
+                <button class="weight-btn" onclick="addToCart(this, 1000, 1100)">1кг - 1100₽</button>
             </div>
             <div class="price"></div>
         </div>
+    </div>
+
+    <div class="cart">
+        <div class="cart-title">Корзина</div>
+        <div id="cart-items"></div>
+        <div class="cart-total">Итого: <span id="cart-total">0</span>₽</div>
     </div>
 
     <script>
@@ -97,33 +139,60 @@
         mainButton.text = "Оплатить";
         mainButton.hide();
 
-        let selectedCoffee = null;
+        let cartItems = [];
 
-        function selectWeight(btn, weight, price) {
+        function addToCart(btn, weight, price) {
             const card = btn.closest('.card');
             const type = card.querySelector('.coffee-type').textContent;
             const grind = card.querySelector('.grind-select').value;
             
-            selectedCoffee = {
+            const item = {
                 type: type,
                 grind: grind,
                 weight: weight,
                 price: price
             };
 
+            cartItems.push(item);
+            updateCart();
             mainButton.show();
-            card.querySelector('.price').textContent = `Итого: ${price}₽`;
         }
 
-        function updatePrice(select) {
-            if (selectedCoffee) {
-                selectedCoffee.grind = select.value;
+        function updateCart() {
+            const cartContainer = document.getElementById('cart-items');
+            const totalElement = document.getElementById('cart-total');
+            let total = 0;
+
+            cartContainer.innerHTML = '';
+            cartItems.forEach((item, index) => {
+                total += item.price;
+                const itemElement = document.createElement('div');
+                itemElement.className = 'cart-item';
+                itemElement.innerHTML = `
+                    <div>${item.type} ${item.weight}г (${item.grind === 'ground' ? 'Молотый' : 'В зернах'}) - ${item.price}₽</div>
+                    <button class="remove-btn" onclick="removeFromCart(${index})">✕</button>
+                `;
+                cartContainer.appendChild(itemElement);
+            });
+
+            totalElement.textContent = total;
+            
+            if (cartItems.length === 0) {
+                mainButton.hide();
             }
         }
 
+        function removeFromCart(index) {
+            cartItems.splice(index, 1);
+            updateCart();
+        }
+
         mainButton.onClick(function() {
-            if (selectedCoffee) {
-                tg.sendData(JSON.stringify(selectedCoffee));
+            if (cartItems.length > 0) {
+                tg.sendData(JSON.stringify({
+                    items: cartItems,
+                    total: cartItems.reduce((sum, item) => sum + item.price, 0)
+                }));
             }
         });
     </script>
